@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão de Equipamentos Informáticos</title>
+
+<style>
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 20px;
+        }
+
+.container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: white;
+        padding: 25px;
+        border-radius: 8px;
+    }
+       .menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+    .menu ul {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #333;
+        font-size: 15px;
+    }
+
+    .menu a:hover {
+        color: #007bff;
+    }
+
+h1, h2 {
+         color: #333;
+        }
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.campos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#campoObservacoes {
+    grid-column: 1 / -1;
+}
+
+#campoValidar {
+    grid-column: 1 / -1;
+}
+
+input, select, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+        }
+
+textarea {
+    resize: vertical;
+        }
+
+.completo {
+    grid-column: 1 / 3;
+        }
+
+button {
+    padding: 12px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+ }
+
+button:hover {
+    background-color: #125ca1;
+        }
+
+ #mensagens {
+    color: red;
+    white-space: pre-line;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+        }
+
+th, td {
+     border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+        }
+
+th {
+     background-color: #1976d2;
+    color: white;
+
+
+        }
+
+.filtros{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.filtros input{
+    flex: 1 1 280px;
+}
+
+.resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.cartao {
+    flex: 1 1 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background-color: #e3f2fd;
+    border-left: 4px solid #1976d2;
+    border-radius: 4px;
+}
+
+.cartao-titulo {
+    font-size: 13px;
+    color: #555;
+}
+
+.cartao strong {
+    font-size: 20px;
+    color: #1976d2;
+}
+
+th[data-campo] {
+    cursor: pointer;
+    user-select: none;
+}
+
+.garantia-a-expirar td {
+    background-color: #fff3cd;
+}
+
+.legenda {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #555;
+}
+footer {
+    width: 100%;
+    margin: 30px 0 0;
+    padding: 15px 0 0;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    color: #555;
+    font-size: 14px;
+}
+footer p {
+    margin: 0 0 8px;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+}
+
+footer a {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ @media (max-width: 650px) {
+form {
+    grid-template-columns: 1fr;
+}
+
+.completo {
+     grid-column: 1;
+}
+
+.tabela {
+    overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+     <header>
+    <nav class="menu">
+        <div class="logo">Gestão de Equipamentos Informáticos</div>
+        
+        <ul>
+             <li><a href="index.html#formulario">Formulário</a></li>
+           <li><a href="Lista de Equipamentos.html">Lista de Equipamentos</a></li>
+        </ul>
+    </nav>
+</header>  
+
+<h2>Registo de Equipamentos</h2>
+
+ <form id="formulario" novalidate>
+
+<div class="campos">
+    <label for="codigo">Código :</label>
+    <input type="text" id="codigo" placeholder="INV-0001">
+        </div>
+
+<div class="campos">
+    <label for="tipo">Tipo de equipamento:</label>
+    <select id="tipo">
+<option value="">Seleccione</option>
+            <option>Computador de mesa</option>
+            <option>Portátil</option>
+            <option>Monitor</option>
+            <option>Impressora</option>
+            <option>Switch</option>
+            <option>Router</option>
+            <option>Access Point</option>
+            <option>UPS</option>
+            <option>Outro</option>
+            </select>
+    </div>
+
+<div class="campos">
+<label for="marca">Marca:</label>
+<input type="text" id="marca">
+        </div>
+
+<div class="campos">
+<label for="modelo">Modelo:</label>
+<input type="text" id="modelo">
+        </div>
+
+<div class="campos">
+<label for="serie">N.º de série:</label>
+<input type="text" id="serie">
+        </div>
+
+<div class="campos">
+    <label for="departamento">Departamento:</label>
+    <select id="departamento">
+            <option value="">Seleccione</option>
+            <option>Administração</option>
+            <option>Redes</option>
+            <option>Desenvolvimento</option>
+            <option>Direcção</option>
+            <option>Outro</option>
+        </select>
+        </div>
+
+<div class="campos">
+<label for="utilizador">Utilizador responsável:</label>
+<input type="text" id="utilizador">
+        </div>
+
+<div class="campos">
+<label for="dataAquisicao">Data de aquisição:</label>
+<input type="date" id="dataAquisicao">
+        </div>
+
+<div class="campos">
+<label for="valor">Valor de aquisição (MT):</label>
+<input type="number" id="valor" step="0.01">
+        </div>
+
+<div class="campos">
+<label for="dataGarantia">Garantia até:</label>
+<input type="date" id="dataGarantia">
+        </div>
+
+<div class="campos">
+    <label for="estado">Estado:</label>
+    <select id="estado">
+
+<option value="">Seleccione</option>
+                    <option>Novo</option>
+                    <option>Em uso</option>
+                    <option>Em manutenção</option>
+                    <option>Avariado</option>
+                    <option>Abatido</option>
+            </select>
+        </div>
+
+<div class="campos">
+<label for="dataAbate">Data de abate:</label>
+<input type="date" id="dataAbate">
+        </div>
+
+<div class="campos" id="campoObservacoes">
+<label for="observacoes">Observações:</label>
+<textarea id="observacoes" rows="3"
+placeholder="Observações sobre o equipamento"></textarea>
+        </div>
+
+<div class="campos" id="campoValidar">
+<button type="submit" id="validarBtn">Registar Equipamentos</button>
+        </div>
+ </form>
+
+    <div id="mensagens"></div>
+
+<footer id="contactos">
+    <h3>Contactos</h3>
+    <p>
+        <a href="tel:+258879027839">Telefone: +258 87 902 7839</a>
+        &nbsp;|&nbsp;
+        <a href="mailto:Keylachmathavel@gmail.com">Email: Keylachmathavel@gmail.com</a>
+    </p>
+    <p>&copy; 2026 Sistema de Gestão de Inventário de Equipamentos Informáticos. Keyla Mathavel</p>
+</footer>
+
+</div>
+<script src="app.js"></script>
+
+</body>

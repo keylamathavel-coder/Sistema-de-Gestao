@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Equipamentos</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+}
+   .menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+    .menu ul {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #333;
+        font-size: 15px;
+    }
+
+    .menu a:hover {
+        color: #007bff;
+    }
+
+h1,
+h2 {
+    color: #333;
+}
+
+
+button {
+    padding: 12px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #125ca1;
+}
+
+#mensagens {
+    color: red;
+    white-space: pre-line;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #1976d2;
+    color: white;
+
+
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.filtros input {
+    flex: 1 1 280px;
+}
+
+.resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.cartao {
+    flex: 1 1 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background-color: #e3f2fd;
+    border-left: 4px solid #1976d2;
+    border-radius: 4px;
+}
+
+.cartao-titulo {
+    font-size: 13px;
+    color: #555;
+}
+
+.cartao strong {
+    font-size: 20px;
+    color: #1976d2;
+}
+
+th[data-campo] {
+    cursor: pointer;
+    user-select: none;
+}
+
+.garantia-valida td {
+    background-color: #d4edda;   /* verde: equipamento dentro da garantia */
+}
+
+.garantia-a-expirar td {
+    background-color: #ffcc80;   /* laranja: garantia expira nos próximos 30 dias */
+}
+
+.legenda .cor {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px 0 12px;
+    border: 1px solid #999;
+    vertical-align: middle;
+}
+
+.legenda .cor:first-child {
+    margin-left: 0;
+}
+
+.legenda .cor-verde {
+    background-color: #d4edda;
+}
+
+.legenda .cor-laranja {
+    background-color: #ffcc80;
+}
+
+.legenda {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #555;
+}
+
+footer {
+    width: 100%;
+    margin: 30px 0 0;
+    padding: 15px 0 0;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    color: #555;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0 0 8px;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+}
+
+footer a {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+@media (max-width: 650px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    .completo {
+        grid-column: 1;
+    }
+
+    .tabela {
+        overflow-x: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+   
+    </header>
+  <main class="container">  
+      <header>
+
+        <nav class="menu">
+            <div class="logo">Gestão de Inventário</div>
+            <ul>
+    <li><a class="ativo" href="index.html">Formulário</a></li>
+    <li><a href="Lista de Equipamentos.html">Lista de Equipamentos</a></li>
+            </ul>
+        </nav>
+    </header>
+<h1>Lista de Equipamentos</h1>
+        <div class="resumo" id="resumo"></div>
+        <div class="filtros">
+            <input type="search" id="pesquisa" placeholder="Pesquisar por código, marca, modelo, série ou utilizador">
+
+<select id="filtroTipo">
+    <option value="">Todos os tipos</option>
+    <option>Computador de mesa</option>
+    <option>Portátil</option>
+    <option>Monitor</option>
+    <option>Impressora</option>
+    <option>Switch</option>
+    <option>Router</option>
+    <option>Access Point</option>
+    <option>UPS</option>
+    <option>Outro</option>
+</select>
+
+<select id="filtroEstado">
+    <option value="">Todos os estados</option>
+    <option>Novo</option>
+    <option>Em uso</option>
+    <option>Em manutenção</option>
+    <option>Avariado</option>
+    <option>Abatido</option>
+</select>
+
+<select id="filtroDepartamento">
+    <option value="">Todos os departamentos</option>
+    <option>Administração</option>
+    <option>Redes</option>
+    <option>Desenvolvimento</option>
+    <option>Direcção</option>
+    <option>Outro</option>
+            </select>
+            <button type="button" id="limparFiltros" class="secundario">Limpar filtros</button>
+        </div>
+  
+<p class="legenda">
+    <span class="cor cor-verde"></span>Verde: dentro da garantia
+    <span class="cor cor-laranja"></span>Laranja: garantia expira nos próximos 30 dias
+    <span class="cor"></span>Sem cor: garantia expirada ou sem garantia
+</p>
+<div class="tabela">
+    <table>
+        <thead>
+            <tr>
+                <th data-campo="codigo">Código</th>
+                <th data-campo="tipo">Tipo</th>
+                <th data-campo="marca">Marca / Modelo</th>
+                <th data-campo="departamento">Departamento</th>
+                <th data-campo="utilizador">Utilizador</th>
+                <th data-campo="estado">Estado</th>
+                <th data-campo="criado_em">Registado em</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+                <tbody id="listaEquipamentos"></tbody>
+            </table>
+        </div>
+        <div id="mensagens" aria-live="polite"></div>
+    </main>
+    <footer>
+        <h3>Contactos</h3>
+        <p><a href="tel:+258879027839">Telefone: +258 87 902 7839</a> | <a
+                href="mailto:Keylachmathavel@gmail.com">Email: Keylachmathavel@gmail.com</a></p>
+        <p>&copy; 2026 Sistema de Gestão de Inventário de Equipamentos Informáticos.</p>
+    </footer>
+
+<script src="utilitarios.js"></script>
+<script>
+let todosEquipamentos = [];
+let ordenarPor = null;          
+let ordemAscendente = true;     
+
+//tira acentos e maiuculas para a pesquisa 
+function normalizar(texto) {
+    return String(texto || "").toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function filtrarEquipamentos() {
+    const texto = normalizar(document.getElementById("pesquisa").value.trim());
+    const tipo = document.getElementById("filtroTipo").value;
+    const estado = document.getElementById("filtroEstado").value;
+    const departamento = document.getElementById("filtroDepartamento").value;
+
+    return todosEquipamentos.filter(function (e) {
+        const campos = [e.codigo, e.marca, e.modelo, e.serie, e.utilizador];
+        const corresponde = texto == "" || campos.some(function (c) {
+            return normalizar(c).includes(texto);
+        });
+        return corresponde && (tipo === "" || e.tipo === tipo) && (estado == "" || e.estado === estado) && (departamento === "" || e.departamento === departamento);
+    });
+}
+
+//vai buscar os equipamentos ao php e guada-os e gurada-os para mosrar na tabela
+function carregarLista() {
+    fetch("php/listar.php")
+        .then(resposta => resposta.json())
+        .then(resultado => {
+            if (!resultado.sucesso) {
+                const mensagens = document.getElementById("mensagens");
+                mensagens.style.color = "red";
+                mensagens.textContent = resultado.mensagem;
+                return;
+            }
+            todosEquipamentos = resultado.equipamentos;
+            atualizarResumo();
+            mostrarLista();
+        })
+        .catch(function () {
+            const mensagens = document.getElementById("mensagens");
+            mensagens.textContent = "Não foi possivel carregar a lista.";
+        });
+}
+//Criar resumo
+function criarCartao(pai, titulo, valor) {
+    const cartao = document.createElement("div");
+    cartao.className = "cartao";
+
+    const tituloCartao = document.createElement("span");
+    tituloCartao.className = "cartao-titulo";
+    tituloCartao.textContent = titulo;
+
+    const valorCartao = document.createElement("strong");
+    valorCartao.textContent = valor;
+
+    cartao.appendChild(tituloCartao);
+    cartao.appendChild(valorCartao);
+    pai.appendChild(cartao);
+}
+
+// Resumo no topo: total, quantidade por estado e valor total (sem contar os abatidos)
+function atualizarResumo() {
+    const resumo = document.getElementById("resumo");
+    resumo.innerHTML = "";
+
+    // os estados vêm das opções do filtro de estado (definidas no HTML da lista)
+    const porEstado = {};
+    Array.from(document.getElementById("filtroEstado").options).forEach(function (opcao) {
+        if (opcao.value !== "") {
+            porEstado[opcao.value] = 0;
+        }
+    });
+
+    let valorTotal = 0;
+    todosEquipamentos.forEach(function (e) {
+        porEstado[e.estado] = (porEstado[e.estado] || 0) + 1;
+        if (e.estado !== "Abatido") {
+            valorTotal += parseFloat(e.valor) || 0;
+        }
+    });
+
+    criarCartao(resumo, "Total de equipamentos", todosEquipamentos.length);
+    Object.keys(porEstado).forEach(function (estado) {
+        criarCartao(resumo, estado, porEstado[estado]);
+    });
+    criarCartao(resumo, "Valor total (sem abatidos)",
+        valorTotal.toLocaleString("pt-PT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " MT");
+}
+
+// Texto usado para comparar dois equipamentos na coluna escolhida
+function valorOrdenacao(e, campo) {
+    if (campo === "marca") {
+        return (e.marca || "") + " " + (e.modelo || "");
+    }
+    return e[campo] || "";
+}
+
+// Ordena a lista pela coluna escolhida (sem coluna escolhida, mantém a ordem do servidor)
+function ordenarEquipamentos(lista) {
+    if (ordenarPor === null) {
+        return lista;
+    }
+    return lista.sort(function (a, b) {
+        const resultado = valorOrdenacao(a, ordenarPor).localeCompare(
+            valorOrdenacao(b, ordenarPor), "pt", { numeric: true, sensitivity: "base" });
+        return ordemAscendente ? resultado : -resultado;
+    });
+}
+
+// Mostra ▲ ou ▼ no título da coluna usada na ordenação
+function atualizarSetas() {
+    document.querySelectorAll("th[data-campo]").forEach(function (th) {
+        let seta = "";
+        if (th.dataset.campo === ordenarPor) {
+            seta = ordemAscendente ? " ▲" : " ▼";
+        }
+        th.textContent = th.dataset.titulo + seta;
+    });
+}
+
+// Clicar na mesma coluna inverte a ordem; noutra coluna ordena de A a Z
+function ordenarTabela(campo) {
+    if (ordenarPor === campo) {
+        ordemAscendente = !ordemAscendente;
+    } else {
+        ordenarPor = campo;
+        ordemAscendente = true;
+    }
+    atualizarSetas();
+    mostrarLista();
+}
+
+
+
+//desenha na tabela os equipamentos que possam pela pesquisa e pelos filtros
+function mostrarLista() {
+    const tbody = document.getElementById("listaEquipamentos");
+    tbody.innerHTML = "";
+
+    const equipamentos = ordenarEquipamentos(filtrarEquipamentos());
+
+    if (equipamentos.length === 0) {
+        const linhaVazia = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 8;
+        td.textContent = "Nenhum equipamento encontrado.";
+        linhaVazia.appendChild(td);
+        tbody.appendChild(linhaVazia);
+        return;
+    }
+    equipamentos.forEach(function (e) {
+        const linha = document.createElement("tr");
+
+        // Cor da linha conforme a garantia (a expirada e a sem garantia ficam sem cor)
+        const garantia = estadoGarantia(e.data_garantia);
+        if (garantia === "valida") {
+            linha.className = "garantia-valida";
+            linha.title = "Dentro da garantia até " + formatarData(e.data_garantia);
+        } else if (garantia === "a-expirar") {
+            linha.className = "garantia-a-expirar";
+            linha.title = "Garantia termina em " + formatarData(e.data_garantia);
+        }
+
+        // Texto de cada coluna (a última é a data e hora em que o equipamento foi registado)
+        [e.codigo, e.tipo, e.marca + " / " + e.modelo, e.departamento, e.utilizador, e.estado,
+            formatarDataHora(e.criado_em)]
+            .forEach(function (texto) {
+                const td = document.createElement("td");
+                td.textContent = texto;
+                linha.appendChild(td);
+            });
+        const tdAcoes = document.createElement("td");
+
+        // Botão Detalhes: abre a terceira página com todos os dados do equipamento
+        const btnDetalhes = document.createElement("button");
+        btnDetalhes.type = "button";
+        btnDetalhes.textContent = "Detalhes";
+        btnDetalhes.addEventListener("click", function () {
+            verDetalhes(e);
+        });
+        tdAcoes.appendChild(btnDetalhes);
+
+        const btnEditar = document.createElement("button");
+        btnEditar.type = "button";
+        btnEditar.style.marginLeft = "6px";
+        btnEditar.textContent = "Editar";
+        btnEditar.addEventListener("click", function () {
+            editarEquipamento(e);
+        });
+        tdAcoes.appendChild(btnEditar);
+
+        const btnRemover = document.createElement("button");
+        btnRemover.type = "button";
+        btnRemover.textContent = "Remover";
+        btnRemover.style.cssText = "margin-left:6px;background:#c62828;";
+        btnRemover.addEventListener("click", function () {
+            removerEquipamento(e);
+        });
+        tdAcoes.appendChild(btnRemover);
+        linha.appendChild(tdAcoes);
+        tbody.appendChild(linha);
+    });
+}
+
+// Abre a página Detalhes.html com o equipamento escolhido (o id vai no endereço)
+function verDetalhes(e) {
+    window.location.href = "Detalhes.html?id=" + encodeURIComponent(e.id);
+}
+
+// O formulário está noutra página: abre-o já com este equipamento para editar
+function editarEquipamento(e) {
+    window.location.href = "index.html?editar=" + encodeURIComponent(e.id);
+}
+
+// Pede confirmação e remove o equipamento da base de dados
+function removerEquipamento(e) {
+    if (!confirm("Tem a certeza que deseja remover o equipamento " + e.codigo + "?")) {
+        return;
+    }
+
+    const mensagens = document.getElementById("mensagens");
+
+    fetch("php/remover.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: e.id })
+    })
+        .then(resposta => resposta.json())
+        .then(resultado => {
+            mensagens.style.color = resultado.sucesso ? "green" : "red";
+            mensagens.textContent = resultado.mensagem;
+
+            if (resultado.sucesso) {
+                carregarLista();
+            }
+        })
+        .catch(function () {
+            mensagens.style.color = "red";
+            mensagens.textContent = "Não foi possível comunicar com o servidor.";
+        });
+}
+
+//Pesquisa e filtros
+["filtroTipo", "filtroEstado", "filtroDepartamento"].forEach(function (id) {
+    document.getElementById(id).addEventListener("change", mostrarLista);
+});
+document.getElementById("pesquisa").addEventListener("input", mostrarLista);
+
+//limpa a pesquisa e os filtros
+document.getElementById("limparFiltros").addEventListener("click", function () {
+    document.getElementById("pesquisa").value = "";
+    ["filtroTipo", "filtroEstado", "filtroDepartamento"].forEach(function (id) {
+        document.getElementById(id).value = "";
+    });
+    mostrarLista();
+});
+// Ordenar ao clicar no título de uma coluna (as colunas ordenáveis têm data-campo no HTML)
+document.querySelectorAll("th[data-campo]").forEach(function (th) {
+    th.dataset.titulo = th.textContent.trim();
+    th.addEventListener("click", function () {
+        ordenarTabela(th.dataset.campo);
+    });
+});
+carregarLista();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Equipamento</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+/* Menu (igual ao das outras páginas) */
+.menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+
+.menu a:hover {
+    color: #007bff;
+}
+
+h1 {
+    color: #333;
+}
+
+button {
+    padding: 12px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+     display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #125ca1;
+    
+}
+
+#mensagens {
+    color: red;
+    white-space: pre-line;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    width: 30%;
+    background-color: #e3f2fd;
+    color: #333;
+}
+
+td.garantia-valida {
+    background-color: #d4edda;
+}
+
+td.garantia-a-expirar {
+    background-color: #ffcc80;
+}
+
+.legenda {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.legenda .cor {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px 0 12px;
+    border: 1px solid #999;
+    vertical-align: middle;
+}
+
+.legenda .cor:first-child {
+    margin-left: 0;
+}
+
+.legenda .cor-verde {
+    background-color: #d4edda;
+}
+
+.legenda .cor-laranja {
+    background-color: #ffcc80;
+}
+
+footer {
+    width: 100%;
+    margin: 30px 0 0;
+    padding: 15px 0 0;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    color: #555;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0 0 8px;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+}
+
+footer a {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+@media (max-width: 650px) {
+    .tabela {
+        overflow-x: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <nav class="menu">
+                <div class="logo">Gestão de Inventário</div>
+                <ul>
+                    <li><a href="index.html">Formulário</a></li>
+                    <li><a href="Lista de Equipamentos.html">Lista de Equipamentos</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <h1>Detalhes do Equipamento</h1>
+
+        
+        <p class="legenda">
+            <span class="cor cor-verde"></span>Verde: dentro da garantia
+            <span class="cor cor-laranja"></span>Laranja: garantia expira nos próximos 30 dias
+            <span class="cor"></span>Sem cor: garantia expirada ou sem garantia
+        </p>
+
+        <div class="tabela">
+            <table>
+                <tbody id="detalhes"></tbody>
+            </table>
+        </div>
+
+        <button type="button" id="voltar">Voltar à lista</button>
+
+        <div id="mensagens" aria-live="polite"></div>
+    </main>
+
+    <footer>
+        <h3>Contactos</h3>
+        <p><a href="tel:+258879027839">Telefone: +258 87 902 7839</a> | <a
+                href="mailto:Keylachmathavel@gmail.com">Email: Keylachmathavel@gmail.com</a></p>
+        <p>&copy; 2026 Sistema de Gestão de Inventário de Equipamentos Informáticos.</p>
+    </footer>
+
+<!-- Funções partilhadas com a página Lista (datas, formatação e estado da garantia) -->
+<script src="utilitarios.js"></script>
+
+<script>
+// Texto que explica a situação da garantia, mostrado ao lado da data
+const TEXTO_GARANTIA = {
+    "valida": "Dentro da garantia",
+    "a-expirar": "Garantia a expirar nos próximos 30 dias",
+    "expirada": "Garantia expirada",
+    "sem-garantia": "Sem garantia registada"
+};
+
+// Acrescenta uma linha (nome do campo + valor) à tabela de detalhes.
+// "classe" é opcional e serve para pintar a célula do valor.
+function adicionarLinha(titulo, valor, classe) {
+    const linha = document.createElement("tr");
+
+    const th = document.createElement("th");
+    th.textContent = titulo;
+
+    const td = document.createElement("td");
+    td.textContent = valor;
+    if (classe) {
+        td.className = classe;
+    }
+
+    linha.appendChild(th);
+    linha.appendChild(td);
+    document.getElementById("detalhes").appendChild(linha);
+}
+
+// Escreve todos os dados do equipamento na tabela
+function mostrarDetalhes(e) {
+// Valor formatado em meticais; se não houver valor fica "—"
+    const valor = (e.valor === null || e.valor === "")
+        ? "—"
+        : parseFloat(e.valor).toLocaleString("pt-PT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " MT";
+
+    // Situação da garantia: decide a cor (verde/laranja) e o texto
+    const garantia = estadoGarantia(e.data_garantia);
+    const textoGarantia = e.data_garantia
+        ? formatarData(e.data_garantia) + " (" + TEXTO_GARANTIA[garantia] + ")"
+        : TEXTO_GARANTIA[garantia];
+    const classeGarantia = (garantia === "valida" || garantia === "a-expirar") ? "garantia-" + garantia : "";
+
+    adicionarLinha("Código", e.codigo);
+    adicionarLinha("Tipo de equipamento", e.tipo);
+    adicionarLinha("Marca", e.marca);
+    adicionarLinha("Modelo", e.modelo);
+    adicionarLinha("N.º de série", e.serie);
+    adicionarLinha("Departamento", e.departamento);
+    adicionarLinha("Utilizador responsável", e.utilizador || "—");
+    adicionarLinha("Data de aquisição", formatarData(e.data_aquisicao));
+    adicionarLinha("Valor de aquisição", valor);
+    adicionarLinha("Garantia até", textoGarantia, classeGarantia);
+    adicionarLinha("Estado", e.estado);
+    adicionarLinha("Data de abate", formatarData(e.data_abate));
+    adicionarLinha("Observações", e.observacoes || "—");
+    adicionarLinha("Registado em", formatarDataHora(e.criado_em));
+}
+
+// Vai buscar ao PHP o equipamento cujo id vem no endereço (Detalhes.html?id=5)
+function carregarDetalhes() {
+    const mensagens = document.getElementById("mensagens");
+    const id = new URLSearchParams(window.location.search).get("id");
+
+if (id === null) {
+        mensagens.textContent = "Nenhum equipamento foi indicado. Volte à lista e escolha um.";
+        return;
+    }
+
+    fetch("php/detalhes.php?id=" + encodeURIComponent(id))
+        .then(resposta => resposta.json())
+        .then(resultado => {
+            if (!resultado.sucesso) {
+                mensagens.textContent = resultado.mensagem;
+                return;
+            }
+            mostrarDetalhes(resultado.equipamento);
+        })
+        .catch(function () {
+            mensagens.textContent = "Não foi possível carregar os detalhes do equipamento.";
+        });
+}
+
+// Botão "Voltar à lista"
+document.getElementById("voltar").addEventListener("click", function () {
+    window.location.href = "Lista de Equipamentos.html";
+});
+
+carregarDetalhes();
+</script>
+</body>
+
+</html>
